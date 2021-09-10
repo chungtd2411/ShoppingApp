@@ -1,10 +1,11 @@
 package com.shopping.model;
 
-import com.sun.istack.NotNull;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 
 @Entity
@@ -17,17 +18,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
     @Column(name = "username")
+    @NotEmpty(message = "*Please provide your name")
     private String name;
 
-    @NotNull
     @Column(name = "password")
+    @Length(min = 3, message = "*Your password must have at least 5 characters")
+    @NotEmpty(message = "*Please provide your password")
     private String pw;
 
-    @NotNull
-    @Email
     @Column(name = "email")
+    @Email(message = "*Please provide a valid Email")
+    @NotEmpty(message = "*Please provide an email")
     private String email;
 
 }
