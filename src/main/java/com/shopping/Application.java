@@ -48,15 +48,13 @@ public class Application {
                     email = sc.next();
                     user.setEmail(email);
                     if (userRepository.existsByEmail(email)) {
-                        System.out.println("email exited!!!");
-                        break;
+                        System.out.println("Email exited!!!");
                     } else {
                         try {
                             userRepository.save(user);
                             System.out.println("Create account success!!!");
                         } catch (Exception ex) {
                             System.out.println("Error...!!!: "+ ex.getMessage());
-                            break;
                         }
 
                     }
@@ -70,10 +68,9 @@ public class Application {
                         name = sc.next();
                         user1.setName(name);
                         userRepository.save(user1);
-                        System.out.println("edit account success!!!");
+                        System.out.println("Edit account success!!!");
                     }else {
                         System.out.println("Email does not exist!!!");
-                        break;
                     }
                     break;
                 case "3":
@@ -83,7 +80,6 @@ public class Application {
                         System.out.println("Delete account success!!!");
                     }else {
                         System.out.println("Email does not exist!!!");
-                        break;
                     }
                     break;
                 case "4":
@@ -96,8 +92,8 @@ public class Application {
                         System.out.println("Login success!!!");
                     }else {
                         System.out.println("Username or password does not exist!!!");
-                        break;
                     }
+                    break;
                 case "5":
                     productRepository.findAll().forEach(System.out::println);
                     break;
@@ -141,7 +137,7 @@ public class Application {
                 case "10":
                     return;
                 default:
-                    System.out.println("wrong input!!!");
+                    System.out.println("Wrong input!!!");
                     continue;
             }
         }
