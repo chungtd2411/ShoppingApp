@@ -19,7 +19,7 @@ public class Application {
         ProductRepository productRepository = context.getBean(ProductRepository.class);
         OrderRepository orderRepository = context.getBean(OrderRepository.class);
         Scanner sc = new Scanner(System.in);
-        //System.out.println("Input username2 : ");
+        
         while (true) {
             System.out.println("Input 1 to Create new account!" +
                     "\nInput 2 to Edit information!" +
