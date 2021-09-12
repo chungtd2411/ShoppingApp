@@ -1,5 +1,6 @@
 package com.shopping;
 
+import com.shopping.model.JoinOrder;
 import com.shopping.model.Order;
 import com.shopping.model.Product;
 import com.shopping.model.User;
@@ -19,7 +20,8 @@ public class Application {
         ProductRepository productRepository = context.getBean(ProductRepository.class);
         OrderRepository orderRepository = context.getBean(OrderRepository.class);
         Scanner sc = new Scanner(System.in);
-        
+
+        User user = null;
         while (true) {
             System.out.println("Input 1 to Create new account!" +
                     "\nInput 2 to Edit information!" +
@@ -29,29 +31,31 @@ public class Application {
                     "\nInput 6 to Search product by name!" +
                     "\nInput 7 to Search product by price!" +
                     "\nInput 8 to Create order information!" +
-                    "\nInput 9 to View order!" +
-                    "\nInput 10 to Exit!");
+                    "\nInput 9 to View order by order id!" +
+                    "\nInput 10 to View order by user!" +
+                    "\nInput 11 to Exit!");
             String i = sc.next();
             String name;
             String pw;
             String email;
+
             switch (i) {
                 case "1":
                     System.out.println("Input username : ");
                     name = sc.next();
-                    User user = new User();
-                    user.setName(name);
+                    User userSignIn = new User();
+                    userSignIn.setName(name);
                     System.out.println("Input password : ");
                     pw = sc.next();
-                    user.setPw(pw);
+                    userSignIn.setPw(pw);
                     System.out.println("Input email : ");
                     email = sc.next();
-                    user.setEmail(email);
+                    userSignIn.setEmail(email);
                     if (userRepository.existsByEmail(email)) {
                         System.out.println("Email exited!!!");
                     } else {
                         try {
-                            userRepository.save(user);
+                            userRepository.save(userSignIn);
                             System.out.println("Create account success!!!");
                         } catch (Exception ex) {
                             System.out.println("Error...!!!: "+ ex.getMessage());
@@ -87,8 +91,8 @@ public class Application {
                     name = sc.next();
                     System.out.println("Input password : ");
                     pw = sc.next();
-                    User user2 = userRepository.login(name, pw);
-                    if (user2 != null ) {
+                     user = userRepository.login(name, pw);
+                    if (user != null ) {
                         System.out.println("Login success!!!");
                     }else {
                         System.out.println("Username or password does not exist!!!");
@@ -116,25 +120,36 @@ public class Application {
                     }
                     break;
                 case "8":
-                    Order order = new Order();
-                    System.out.println("Input user id : ");
-                    int userId = sc.nextInt();
-                    order.setUserId(userId);
-                    System.out.println("Input product id : ");
-                    int productId = sc.nextInt();
-                    order.setProductId(productId);
-                    System.out.println("Input quantity : ");
-                    int quantity = sc.nextInt();
-                    order.setQuantity(quantity);
-                    orderRepository.save(order);
+                    if(user != null) {
+                        Order order = new Order();
+                        order.setUserId(user.getId());
+                        System.out.println("Input product id : ");
+                        int productId = sc.nextInt();
+                        order.setProductId(productId);
+                        System.out.println("Input quantity : ");
+                        int quantity = sc.nextInt();
+                        order.setQuantity(quantity);
+                        orderRepository.save(order);
+                    } else {
+                        System.out.println("Login to Order!!!");
+                    }
+                   
                     break;
                 case "9":
                     System.out.println("Input order id : ");
                     int id = sc.nextInt();
-                    Order order1 = orderRepository.queryBy(id);
+                    JoinOrder order1 = orderRepository.fetchDataInnerJoin(id);
                     System.out.println(order1);
                     break;
                 case "10":
+                    if(user != null) {
+                        List<JoinOrder> order = orderRepository.findByUserId(user.getId());
+                        order.forEach(System.out::println);
+                    } else {
+                        System.out.println("Login to Order!!!");
+                    }
+                    break;
+                case "11":
                     return;
                 default:
                     System.out.println("Wrong input!!!");
