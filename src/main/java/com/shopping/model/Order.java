@@ -1,6 +1,8 @@
 package com.shopping.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 
@@ -14,13 +16,23 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "uid")
+    @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "productid")
+    @Column(name = "product_id")
     private int productId;
 
     @Column(name = "number")
     private int quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable = false, updatable = false)
+    @Fetch(FetchMode.JOIN)
+    private Product product;
 
 }
